@@ -50,10 +50,10 @@ func runMap(task *Task, mapf func(string, string) []KeyValue) {
 		log.Fatalf("cannot read %v", task.File)
 	}
 	file.Close()
-	fmt.Printf("Mapping words in %v \n", task.File)
+	fmt.Printf("Mapping words in %v for %d reduce tasks\n", task.File, task.Reducers)
 	kva := mapf(task.File, string(content))
 	for _, kv := range kva {
-		fileName := "mr-map-" + strconv.Itoa(ihash(kv.Key)%10)
+		fileName := "mr-map-" + strconv.Itoa(ihash(kv.Key)%task.Reducers)
 		fileOut, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		enc := json.NewEncoder(fileOut)
 		err = enc.Encode(&kv)

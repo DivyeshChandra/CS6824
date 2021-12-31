@@ -86,6 +86,7 @@ func (c *Coordinator) GetTask(req *RequestTask, response *Task) error {
 		response.File = task.File
 		response.TaskID = task.TaskID
 		response.TaskType = task.TaskType
+		response.Reducers = c.nReduce
 		task.SubmitTime = time.Now().Unix()
 		c.taskStatus[task.TaskID] = task
 		c.taskStatus[task.TaskID].TaskStatus = "Running"
@@ -167,7 +168,7 @@ func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	// Your code here.
 	c.mapTasks = make(chan *Task, len(files))
 	c.reduceTasks = make(chan *Task, nReduce)
-	fmt.Println("Setting up map tasks")
+	fmt.Printf("Setting up map tasks with %d reduce tasks \n", nReduce)
 	for i, fileName := range files {
 		c.mapTasks <- &Task{
 			TaskID:     "map-" + strconv.Itoa(i),

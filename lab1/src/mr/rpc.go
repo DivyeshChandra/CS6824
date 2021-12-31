@@ -39,6 +39,7 @@ type Task struct {
 	File       string
 	SubmitTime int64
 	TaskStatus string
+	Reducers   int
 }
 
 //SubmitResponse of submit task
